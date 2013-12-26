@@ -2,14 +2,15 @@ module Jekyll
   module AssetsPlugin
     class Renderer
 
-      STYLESHEET = '<link rel="stylesheet" href="%s">'
-      JAVASCRIPT = '<script src="%s"></script>'
       IMAGE      = '<img src="%s">'
 
 
       def initialize context, logical_path
         @site = context.registers[:site]
         @path = logical_path.strip
+        gzip = @site.assets_config.gzip_extension ? '.gz' : ''
+        @stylesheet = "<link rel='stylesheet' href='%s#{gzip}'>"
+        @javascript = "<script src='%s#{gzip}'></script>"
       end
 
 
@@ -25,13 +26,13 @@ module Jekyll
 
       def render_javascript
         @path << ".js" if File.extname(@path).empty?
-        render_tag JAVASCRIPT
+        render_tag @javascript
       end
 
 
       def render_stylesheet
         @path << ".css" if File.extname(@path).empty?
-        render_tag STYLESHEET
+        render_tag @stylesheet
       end
 
 
